@@ -13,4 +13,10 @@ export default {
 const Template = (args) => <DashboardGrid {...args} />;
 
 export const Default = Template.bind({});
-Default.args = { imageSize: 320, numImages: 13 };
+Default.args = {
+  width: 320,
+  children: [
+    <img src={`https://picsum.photos/id/1/320`} />,
+    <img src={`https://picsum.photos/id/2/320`} />,
+  ],
+};

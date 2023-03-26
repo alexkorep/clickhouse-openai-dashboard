@@ -1,30 +1,28 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-const ImageGrid = ({ imageSize, numImages }) => {
-  const styles = {
-    gridContainer: {
-      display: "grid",
-      gridTemplateColumns: `repeat(auto-fit, minmax(${imageSize}px, 1fr))`,
-      gridGap: "1rem",
-      width: "100%",
-    },
-    image: {
-      width: "100%",
-      height: "auto",
-    },
+const DashboardGrid = ({ children, width }) => {
+  const [numColumns, setNumColumns] = useState(0);
+
+  useEffect(() => {
+    const calculateColumns = () => {
+      const screenWidth = window.innerWidth;
+      const newNumColumns = Math.floor(screenWidth / width);
+      setNumColumns(newNumColumns);
+    };
+    calculateColumns();
+    window.addEventListener("resize", calculateColumns);
+    return () => {
+      window.removeEventListener("resize", calculateColumns);
+    };
+  }, [width]);
+
+  const gridStyle = {
+    display: "grid",
+    gridTemplateColumns: `repeat(${numColumns}, 1fr)`,
+    gap: "10px",
+    padding: "10px"
   };
-
-  const imageUrls = [...Array(numImages)].map(
-    (_, i) => `https://picsum.photos/id/${i + 1}/${imageSize}`
-  );
-
-  return (
-    <div style={styles.gridContainer}>
-      {imageUrls.map((url) => (
-        <img key={url} style={styles.image} src={url} alt="random image" />
-      ))}
-    </div>
-  );
+  return <div style={gridStyle}>{children}</div>;
 };
 
-export default ImageGrid;
+export default DashboardGrid;
